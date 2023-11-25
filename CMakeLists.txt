@@ -6,13 +6,18 @@ project(primitif C)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 # libs
-find_package(SDL2 REQUIRED)
+if (WIN32)
+    set(SDL2_LIBRARIES "${PROJECT_SOURCE_DIR}\\libs\\SDL2\\build\\RelWithDebInfo\\SDL2.lib")
+    set(SDL2_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}\\libs\\SDL2\\include")
+else ()
+    find_package(SDL2 REQUIRED)
+endif ()
 
-# include directories
-include_directories(${SDL2_INCLUDE_DIRS})
+message("ASDASD ${SDL2_INCLUDE_DIRS}")
+message("KDLSKDLSKD ${SDL2_LIBRARIES}")
 
-# links to all targets defined after this call
 link_libraries(${SDL2_LIBRARIES})
+include_directories(${SDL2_INCLUDE_DIRS})
 
 # sources
 set(SOURCE
