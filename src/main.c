@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SDL_MAIN_HANDLED
 #include <SDL.h>
 
 #include "util/util.h"
@@ -8,12 +9,14 @@
 void spawn_rects(SDL_Rect *rects, int count) {
   for (int i = 0; i < count; i++) {
     int num = 10 * i;
-    SDL_Rect rect = {.x = num, .y = num, .w = 10, .h = 10};
-    rects[i] = rect;
+    rects[i].x = num;
+    rects[i].y = num;
+    rects[i].w = 10;
+    rects[i].h = 10;
   }
 }
 
-int main(void) {
+int main(int argc, char **argv) {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     print_sdl_error("Could not initialize SDL\n");
     return 1;
@@ -31,15 +34,19 @@ int main(void) {
   }
 
   int rects_count = 10;
-  SDL_Rect rects[rects_count];
+  SDL_Rect *rects = (SDL_Rect*)malloc(sizeof(SDL_Rect) * rects_count);
   spawn_rects(rects, rects_count);
 
   SDL_Event event;
   while (1) {
     // events
-    SDL_PollEvent(&event);
-    if (event.type == SDL_QUIT)
-      break;
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_QUIT) break;
+
+      if (event.type == SDL_KEYDOWN) {
+        printf("key pressed: %s\n", SDL_GetKeyName(event.key.keysym.sym));
+      }
+    }
 
     // render
     SDL_RenderClear(renderer);
@@ -48,6 +55,8 @@ int main(void) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderPresent(renderer);
   }
+
+  free(rects);
 
   SDL_Quit();
   return 0;

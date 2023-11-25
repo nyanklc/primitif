@@ -1,3 +1,7 @@
 build/
 .cache/
 .vscode/
+.vs/
+out/
+libs/
+CMakeSettings.json
