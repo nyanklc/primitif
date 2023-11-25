@@ -17,7 +17,8 @@ link_libraries(${SDL2_LIBRARIES})
 # sources
 set(SOURCE
    ${SOURCE}
-   ${CMAKE_CURRENT_SOURCE_DIR}/main.c
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/util/util.c
 )
 
 # executables
