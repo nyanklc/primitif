@@ -23,7 +23,9 @@ include_directories(${SDL2_INCLUDE_DIRS})
 set(SOURCE
    ${SOURCE}
    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/electron.c
    ${CMAKE_CURRENT_SOURCE_DIR}/src/util/util.c
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/util/circle.c
 )
 
 # executables
