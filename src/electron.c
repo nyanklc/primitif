@@ -22,7 +22,7 @@ void electron_render(electron_t* electron, SDL_Renderer* renderer, SDL_Color *co
 	circle_render(electron->circle, renderer, color);
 }
 
-void electron_move(electron_t* electron, int amountx, int amounty) {
+void electron_move(electron_t* electron, float amountx, float amounty) {
 	circle_move(electron->circle, amountx, amounty);
 }
 

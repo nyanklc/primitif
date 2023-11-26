@@ -8,10 +8,10 @@
 #include "../globals.h"
 
 typedef struct {
-  int x;
-  int y;
+  float x;
+  float y;
   float radius;
-  SDL_Point *points;
+  SDL_FPoint *points;
   size_t points_count;
 } circle_t;
 
@@ -19,6 +19,6 @@ circle_t* circle_create(int posx, int posy, float radius);
 void circle_destroy(circle_t *circle);
 bool circle_construct_points(circle_t* circle);
 void circle_render(circle_t* circle, SDL_Renderer* renderer, SDL_Color* color);
-void circle_move(circle_t* circle, int amountx, int amounty);
+void circle_move(circle_t* circle, float amountx, float amounty);
 
 #endif
