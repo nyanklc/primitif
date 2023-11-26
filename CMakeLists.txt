@@ -26,6 +26,7 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/src/electron.c
    ${CMAKE_CURRENT_SOURCE_DIR}/src/util/util.c
    ${CMAKE_CURRENT_SOURCE_DIR}/src/util/circle.c
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/util/force.c
 )
 
 # executables

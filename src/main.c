@@ -79,6 +79,68 @@ static void render_electrons(electron_t** electrons, int count,
   }
 }
 
+static void apply_forces_electrons(force_t *forces, electron_t** electrons, int count, float dt) {
+  for (int i = 0; i < count; i++) {
+    electron_apply_force(electrons[i], &forces[i], dt);
+  }
+}
+
+static void apply_force_electrons(force_t *force, electron_t** electrons, int count, float dt) {
+  for (int i = 0; i < count; i++) {
+    electron_apply_force(electrons[i], force, dt);
+  }
+}
+
+static void update_electrons(electron_t** electrons, int count, float dt) {
+  for (int i = 0; i < count; i++) {
+    electron_update(electrons[i], dt);
+  }
+}
+
+static force_t *calculate_mouse_button_forces(SDL_MouseButtonEvent *mbe) {
+  force_t* forces;
+  forces = (force_t *)malloc(sizeof(force_t) * g_electrons_count);
+  if (!forces) return NULL;
+
+  for (int i = 0; i < g_electrons_count; i++) {
+    forces[i].value = point_distance(
+      mbe->x, mbe->y,
+      g_electrons[i]->circle->x,
+      g_electrons[i]->circle->y
+    );
+
+    forces[i].x = g_electrons[i]->circle->x - mbe->x;
+    forces[i].y = g_electrons[i]->circle->y - mbe->y;
+    // push
+    if (mbe->button == SDL_BUTTON_LEFT) {}
+    // pull
+    else if (mbe->button == SDL_BUTTON_RIGHT) {
+      forces[i].x *= -1;
+      forces[i].y *= -1;
+    }
+    else {
+      const char* button_name;
+      switch (mbe->button) {
+        case SDL_BUTTON_MIDDLE:
+          button_name = "Middle";
+          break;
+        case SDL_BUTTON_X1:
+          button_name = "X1";
+          break;
+        case SDL_BUTTON_X2:
+          button_name = "X2";
+          break;
+        default:
+          button_name = "Unknown";
+          break;
+      }
+      printf("unhandled mouse button input: %s\n", button_name);
+    }
+  }
+
+  return forces;
+}
+
 int main(int argc, char **argv) {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     print_sdl_error("Could not initialize SDL\n");
@@ -101,18 +163,27 @@ int main(int argc, char **argv) {
   g_electrons = create_electrons(g_electrons_count);
   if (!g_electrons) return 1;
 
+  const float dt = PRIMITIF_SIM_DT;
+
   SDL_Event event;
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   while (1) {
     // events
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) break;
+      if (event.type == SDL_MOUSEBUTTONDOWN) {
+        force_t *forces = calculate_mouse_button_forces(&event.button);
+        if (forces) {
+          apply_forces_electrons(forces, g_electrons, g_electrons_count, dt);
+        }
+      }
     }
+
+    update_electrons(g_electrons, g_electrons_count, dt);
 
     // render
     render_rects(g_rects, g_rects_count, renderer, &g_rects_color);
     render_electrons(g_electrons, g_electrons_count, renderer, &g_electrons_color);
-
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
   }
