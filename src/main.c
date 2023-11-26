@@ -175,6 +175,7 @@ int main(int argc, char **argv) {
         force_t *forces = calculate_mouse_button_forces(&event.button);
         if (forces) {
           apply_forces_electrons(forces, g_electrons, g_electrons_count, dt);
+          free(forces);
         }
       }
     }
